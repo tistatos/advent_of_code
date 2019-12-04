@@ -25,6 +25,17 @@ impl Line {
         [self.start[0]+ (self.dir[0] as f32 * s) as i32 ,
         self.start[1]+ (self.dir[1] as f32 * s) as i32]
     }
+
+    fn len(&self) -> i32 {
+        self.dir[0].abs() + self.dir[1].abs()
+    }
+
+    fn partial_len(&self, s: f32) -> i32 {
+        let p =
+            [(self.dir[0] as f32 * s).round(),
+            (self.dir[1] as f32 * s).round()];
+        (p[0].abs() + p[1].abs()) as i32
+    }
 }
 
 type Wire= Vec<Line>;
@@ -60,7 +71,7 @@ fn manhattan_distance(a: &Point, b: &Point) -> i32 {
     (b[0] - a[0]).abs() + (b[1] - a[1]).abs()
 }
 
-fn find_intersection(a: &Line, b: &Line) -> Option<i32>{
+fn find_intersection(a: &Line, b: &Line) -> Option<(Point, f32, f32)> {
     if a.start != b.start {
         let u = &a.dir;
         let v = &b.dir;
@@ -75,28 +86,52 @@ fn find_intersection(a: &Line, b: &Line) -> Option<i32>{
         if s > 0.0 && s < 1.0 && t > 0.0 && t < 1.0 {
             let i = a.point(s);
             println!("intersection at {:?}", i);
-            return Some(manhattan_distance(&i, &[0, 0]))
+            return Some((i, s, t));
         }
     }
     None
 }
 
+fn wire_lengths(a: &Wire,b: &Wire, a_idx: usize, b_idx: usize, s: f32, t: f32) -> i32 {
+    let mut len = 0;
+    for i in 0..a_idx {
+        len += a[i].len();
+    }
+    let last_bit = a[a_idx].partial_len(s);
+    len += last_bit;
+
+    for i in 0..b_idx {
+        len += b[i].len();
+    }
+    let last_bit = b[b_idx].partial_len(t);
+    len += last_bit;
+    len
+}
+
 fn find_intersections(a: &Wire, b: &Wire) -> Option<i32>{
     let mut closest_intersection_distance = std::i32::MAX;
+    let mut shortest_intersection_length = std::i32::MAX;
     for i in 0..a.len() {
         let a_line = &a[i];
         for j in 0..b.len() {
             let b_line = &b[j];
             if !a_line.parallel(b_line) {
-                if let Some(d) = find_intersection(a_line, b_line) {
+                if let Some((intersection, s, t)) = find_intersection(a_line, b_line) {
+                    let d = manhattan_distance(&intersection, &[0, 0]);
                     if d < closest_intersection_distance {
                         closest_intersection_distance = d;
+                    }
+
+                    let l = wire_lengths(a, b, i, j, s, t);
+                    if l < shortest_intersection_length {
+                        shortest_intersection_length = l;
                     }
                 }
             }
         }
     }
 
+    println!("day 3 part 2: {}", shortest_intersection_length);
     if closest_intersection_distance < std::i32::MAX {
         Some(closest_intersection_distance)
     }
@@ -107,7 +142,6 @@ fn find_intersections(a: &Wire, b: &Wire) -> Option<i32>{
 
 fn main() {
     let input = get_string_rows("input_data/day_3");
-    //let input = vec!("R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51", "U98,R91,D20,R16,D67,R40,U7,R15,U6,R7");
     let wires: Vec<Wire> = input.iter().map(|w| to_wire(w)).collect();
 
     if let Some(i) = find_intersections(&wires[0], &wires[1]) {
