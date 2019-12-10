@@ -1,6 +1,7 @@
 use std::fs::File;
 use std::io::BufReader;
 use std::io::prelude::*;
+pub mod intcode;
 
 pub fn get_string(file: &str) -> String {
     let input = File::open(file).unwrap();
