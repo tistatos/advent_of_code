@@ -1,5 +1,5 @@
-mod aoc;
-use self::aoc::get_string_rows;
+extern crate advent_of_code;
+use self::advent_of_code::get_string_rows;
 
 type Point=[i32; 2];
 type Vector=[i32; 2];

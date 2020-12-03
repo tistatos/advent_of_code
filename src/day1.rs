@@ -1,6 +1,6 @@
-mod aoc;
+extern crate advent_of_code;
 
-use self::aoc::get_rows;
+use self::advent_of_code::get_rows;
 
 
 fn main() {

@@ -1,5 +1,5 @@
-mod aoc;
-use self::aoc::get_string;
+extern crate advent_of_code;
+use self::advent_of_code::get_string;
 
 const WIDTH: usize = 25;
 const HEIGHT: usize = 6;

@@ -1,7 +1,7 @@
-mod aoc;
+extern crate advent_of_code;
 use std::collections::{HashMap, HashSet, VecDeque};
 
-use self::aoc::get_string_rows;
+use self::advent_of_code::get_string_rows;
 
 fn count_orbits(mut input: Vec<String>) -> i32 {
     let mut jumps: HashMap<String, i32> = HashMap::new();

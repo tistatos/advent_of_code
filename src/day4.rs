@@ -1,4 +1,4 @@
-mod aoc;
+extern crate advent_of_code;
 use std::env;
 use std::sync::Arc;
 use std::sync::atomic::{AtomicUsize, Ordering};

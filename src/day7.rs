@@ -1,5 +1,5 @@
-mod aoc;
-use self::aoc::get_csv;
+extern crate advent_of_code;
+use self::advent_of_code::get_csv;
 use std::collections::HashSet;
 
 enum Mode {
