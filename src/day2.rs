@@ -1,6 +1,5 @@
-mod aoc;
-
-use crate::aoc::get_string_rows;
+extern crate advent_of_code;
+use advent_of_code::get_string_rows;
 
 fn valid_password(pass: &String, key: char, limit: &Vec<usize>) -> bool {
     let key_count: usize = pass

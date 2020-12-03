@@ -1,6 +1,5 @@
-mod aoc;
-
-use self::aoc::get_rows;
+extern crate advent_of_code;
+use advent_of_code::get_rows;
 
 fn main() {
     let input: Vec<u32> = get_rows("input_data/day_1");
