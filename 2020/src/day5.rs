@@ -1,5 +1,6 @@
 extern crate advent_of_code;
 use advent_of_code::get_string_rows;
+use std::collections::HashSet;
 
 const ROWS: usize = 127;
 const ROW_WIDTH: usize = 7;
@@ -32,5 +33,11 @@ pub fn main() {
         })
         .collect();
     seats.sort();
-    println!("day 5 part 1: {}", seats.last().unwrap());
+    let first = seats.first().unwrap();
+    let last = seats.last().unwrap();
+    println!("day 5 part 1: {}", last);
+
+    let all_seats: HashSet<usize> = (*first..*last).collect();
+    let used_seats: HashSet<usize> = seats.drain(..).collect();
+    println!("day 5 part 2: {:?}", all_seats.difference(&used_seats));
 }
