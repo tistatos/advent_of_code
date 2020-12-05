@@ -3,6 +3,16 @@ use std::io::prelude::*;
 use std::io::BufReader;
 pub mod intcode;
 
+#[macro_export]
+macro_rules! get_row_input {
+    ($d: expr) => {
+        get_string_rows(format!("{}{}", "input_data/day_", $d).as_str());
+    };
+    ($d: expr, $t: ty) => {
+        get_rows(format!("{}{}", "input_data/day_", $d).as_str());
+    };
+}
+
 pub fn get_string(file: &str) -> String {
     let input = File::open(file).unwrap();
     let mut buf_reader = BufReader::new(input);

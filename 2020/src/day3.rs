@@ -1,10 +1,11 @@
+#[macro_use]
 extern crate advent_of_code;
 use advent_of_code::get_string_rows;
 
 static TREE: char = '#';
 
 pub fn main() {
-    let input = get_string_rows("input_data/day_3");
+    let input = get_row_input!("3");
     let patterns = vec![(1, 1), (3, 1), (5, 1), (7, 1), (1, 2)];
 
     let tree_count: Vec<u64> = patterns

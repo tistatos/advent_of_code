@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate advent_of_code;
 use advent_of_code::get_string_rows;
 use std::collections::HashSet;
@@ -6,7 +7,7 @@ const ROWS: usize = 127;
 const ROW_WIDTH: usize = 7;
 
 pub fn main() {
-    let input = get_string_rows("input_data/day_5");
+    let input = get_row_input!("5");
     let seat_number = |r: usize, s: usize| r * 8 + s;
     let bsp = |bsp: &mut (usize, usize), f: bool| {
         if f {

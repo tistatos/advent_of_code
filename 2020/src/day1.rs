@@ -1,8 +1,9 @@
+#[macro_use]
 extern crate advent_of_code;
 use advent_of_code::get_rows;
 
 fn main() {
-    let input: Vec<u32> = get_rows("input_data/day_1");
+    let input: Vec<u32> = get_row_input!("1", u32);
 
     let mut part_one = 0;
     let mut part_two = 0;

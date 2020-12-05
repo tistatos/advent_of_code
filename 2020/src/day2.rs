@@ -1,3 +1,4 @@
+#[macro_use]
 extern crate advent_of_code;
 use advent_of_code::get_string_rows;
 
@@ -24,7 +25,7 @@ struct PasswordSet {
 }
 
 pub fn main() {
-    let rows = get_string_rows("input_data/day_2");
+    let rows = get_row_input!("2");
     let passwords: Vec<PasswordSet> = rows
         .iter()
         .map(|r| {
