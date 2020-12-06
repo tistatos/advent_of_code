@@ -13,6 +13,13 @@ macro_rules! get_row_input {
     };
 }
 
+#[macro_export]
+macro_rules! get_row_group {
+    ($d: expr) => {
+        get_string_row_groups(format!("{}{}", "input_data/day_", $d).as_str());
+    };
+}
+
 pub fn get_string(file: &str) -> String {
     let input = File::open(file).unwrap();
     let mut buf_reader = BufReader::new(input);
@@ -78,4 +85,20 @@ pub fn get_string_rows(file: &str) -> Vec<String> {
     }
 
     return output;
+}
+
+pub fn get_string_row_groups(file: &str) -> Vec<Vec<String>> {
+    let mut output = vec![];
+    let input = get_string_rows(file);
+    let mut group = vec![];
+    for r in input {
+        if r.len() == 0 {
+            output.push(group.clone());
+            group.clear();
+        } else {
+            group.push(r);
+        }
+    }
+    output.push(group);
+    output
 }
