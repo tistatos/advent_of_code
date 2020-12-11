@@ -10,47 +10,29 @@ const FLOOR: char = '.';
 type Seating = Vec<Vec<char>>;
 
 fn evaluate(
-    map: Seating,
-    width: usize,
-    height: usize,
+    map: &Seating,
     occupied_limit: usize,
-    seat_fn: fn(&Seating, usize, usize, &mut usize) -> bool,
+    seat_fn: fn(&Seating, usize, usize, (i32, i32), &mut usize),
 ) -> (Seating, usize) {
     let mut changes = 0;
     let mut result = map.clone();
     for y in 0..map.len() {
-        let ref row = map[y];
-        for x in 0..row.len() {
+        for x in 0..map[y].len() {
             let mut occupied_count = 0;
             let seat = map[y][x];
             if seat == FLOOR {
                 continue;
             }
 
-            if x > 0 {
-                seat_fn(&map, y, x - 1, &mut occupied_count);
-                if y > 0 {
-                    seat_fn(&map, y - 1, x - 1, &mut occupied_count);
-                }
-                if y < height - 1 {
-                    seat_fn(&map, y + 1, x - 1, &mut occupied_count);
-                }
-            }
-            if y > 0 {
-                seat_fn(&map, y - 1, x, &mut occupied_count);
-            }
-            if y < height - 1 {
-                seat_fn(&map, y + 1, x, &mut occupied_count);
-            }
-            if x < width - 1 {
-                seat_fn(&map, y, x + 1, &mut occupied_count);
-                if y > 0 {
-                    seat_fn(&map, y - 1, x + 1, &mut occupied_count);
-                }
-                if y < height - 1 {
-                    seat_fn(&map, y + 1, x + 1, &mut occupied_count);
+            for i in -1..2 {
+                for j in -1..2 {
+                    if i == 0 && j == 0 {
+                        continue;
+                    }
+                    seat_fn(&map, y, x, (i, j), &mut occupied_count);
                 }
             }
+
             if occupied_count == 0 && seat == FREE {
                 result[y][x] = OCCUPIED;
                 changes += 1;
@@ -67,15 +49,34 @@ fn calculate_occupied(map: Vec<Vec<char>>) -> usize {
     map.iter().flatten().filter(|s| **s == OCCUPIED).count()
 }
 
-fn closest_seat(seats: &Seating, y: usize, x: usize, count: &mut usize) -> bool {
-    let seat = seats[y][x];
+fn closest_tile(seats: &Seating, y: usize, x: usize, dir: (i32, i32), count: &mut usize) {
+    let y = y as i32 + dir.0;
+    let x = x as i32 + dir.1;
+    let height = seats.len();
+    let width = seats[0].len();
+    if x < 0 || y < 0 || y as usize >= height || x as usize >= width {
+        return;
+    }
+    let seat = seats[y as usize][x as usize];
     if seat == OCCUPIED {
         *count += 1;
-        true
-    } else if seat == FREE {
-        true
-    } else {
-        false
+    }
+}
+
+fn closest_seat(seats: &Seating, y: usize, x: usize, dir: (i32, i32), count: &mut usize) {
+    let y = y as i32 + dir.0;
+    let x = x as i32 + dir.1;
+    let height = seats.len();
+    let width = seats[0].len();
+    if x < 0 || y < 0 || y as usize >= height || x as usize >= width {
+        return;
+    }
+
+    let seat = seats[y as usize][x as usize];
+    if seat == OCCUPIED {
+        *count += 1;
+    } else if seat == FLOOR {
+        closest_seat(&seats, y as usize, x as usize, dir, count)
     }
 }
 
@@ -84,14 +85,16 @@ pub fn main() {
         .iter()
         .map(|s| s.chars().collect())
         .collect();
-    let height = input.len();
-    let width = input[0].len();
 
-    let mut res = evaluate(input, width, height, 4, closest_seat);
-    let mut changes = res.1;
-    while changes > 0 {
-        res = evaluate(res.0, width, height, 4, closest_seat);
-        changes = res.1;
+    let mut res = evaluate(&input, 4, closest_tile);
+    while res.1 > 0 {
+        res = evaluate(&res.0, 4, closest_tile);
     }
     println!("Day 11 part 1: {}", calculate_occupied(res.0));
+
+    let mut res = evaluate(&input, 5, closest_seat);
+    while res.1 > 0 {
+        res = evaluate(&res.0, 5, closest_seat);
+    }
+    println!("Day 11 part 2: {}", calculate_occupied(res.0));
 }
