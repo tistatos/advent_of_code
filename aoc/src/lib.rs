@@ -102,3 +102,7 @@ pub fn get_string_row_groups(file: &str) -> Vec<Vec<String>> {
     output.push(group);
     output
 }
+
+pub fn manhattan_distance(a: (i32, i32), b: (i32, i32)) -> i32 {
+    (b.0 - a.0).abs() + (b.1 - a.1).abs()
+}
