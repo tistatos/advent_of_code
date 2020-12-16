@@ -14,6 +14,13 @@ macro_rules! get_row_input {
 }
 
 #[macro_export]
+macro_rules! get_csv_input {
+    ($d: expr, $e: expr, $t: ty) => {
+        get_csv(format!("{}{}", "input_data/day_", $d).as_str(), $e);
+    };
+}
+
+#[macro_export]
 macro_rules! get_row_group {
     ($d: expr) => {
         get_string_row_groups(format!("{}{}", "input_data/day_", $d).as_str());
