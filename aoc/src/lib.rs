@@ -1,6 +1,8 @@
+use std::collections::HashMap;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+
 pub mod intcode;
 
 #[macro_export]
@@ -10,6 +12,13 @@ macro_rules! get_row_input {
     };
     ($d: expr, $t: ty) => {
         get_rows(format!("{}{}", "input_data/day_", $d).as_str());
+    };
+}
+
+#[macro_export]
+macro_rules! get_map_input {
+    ($d: expr) => {
+        get_map(format!("{}{}", "input_data/day_", $d).as_str());
     };
 }
 
@@ -108,6 +117,17 @@ pub fn get_string_row_groups(file: &str) -> Vec<Vec<String>> {
     }
     output.push(group);
     output
+}
+
+pub fn get_map(file: &str) -> HashMap<(usize, usize), char> {
+    let rows = get_string_rows(file);
+    let mut result = HashMap::new();
+    for (y, r) in rows.iter().enumerate() {
+        for (x, c) in r.chars().enumerate() {
+            result.insert((x, y), c);
+        }
+    }
+    result
 }
 
 pub fn manhattan_distance(a: (i32, i32), b: (i32, i32)) -> i32 {
