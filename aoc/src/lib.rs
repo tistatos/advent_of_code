@@ -34,6 +34,10 @@ macro_rules! get_row_group {
     ($d: expr) => {
         get_string_row_groups(format!("{}{}", "input_data/day_", $d).as_str());
     };
+
+    ($d: expr, $t: ty) => {
+        get_row_groups::<$t>(format!("{}{}", "input_data/day_", $d).as_str());
+    };
 }
 
 pub fn get_string(file: &str) -> String {
@@ -101,6 +105,21 @@ pub fn get_string_rows(file: &str) -> Vec<String> {
     }
 
     return output;
+}
+
+pub fn get_row_groups<T: std::str::FromStr>(file: &str) -> Vec<Vec<T>> {
+    let groups = get_string_row_groups(file);
+    groups
+        .iter()
+        .map(|g| {
+            g.iter()
+                .map(|v| match v.parse::<T>() {
+                    Ok(as_type) => as_type,
+                    Err(_) => panic!("Error parsing input"),
+                })
+                .collect()
+        })
+        .collect()
 }
 
 pub fn get_string_row_groups(file: &str) -> Vec<Vec<String>> {
