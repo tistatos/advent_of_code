@@ -6,6 +6,13 @@ use std::io::BufReader;
 pub mod intcode;
 
 #[macro_export]
+macro_rules! get_string_input {
+    ($d: expr) => {
+        get_string(format!("{}{}", "input_data/day_", $d).as_str());
+    };
+}
+
+#[macro_export]
 macro_rules! get_row_input {
     ($d: expr) => {
         get_string_rows(format!("{}{}", "input_data/day_", $d).as_str());
